@@ -1,0 +1,29 @@
+#!/bin/bash
+set -e
+
+# Elimina un servidor potencialmente bloqueado
+rm -f /app/tmp/pids/server.pid
+
+# Espera a que MongoDB esté disponible
+echo "Esperando a que MongoDB esté disponible..."
+# En lugar de usar nc, hacemos un intento de conexión más básico con /dev/tcp
+for i in {1..30}; do
+  if (echo > /dev/tcp/mongo/27017) >/dev/null 2>&1; then
+    echo "MongoDB disponible, continuando..."
+    break
+  fi
+  echo "MongoDB aún no está disponible - esperando... Intento $i/30"
+  sleep 2
+  if [ $i -eq 30 ]; then
+    echo "Tiempo de espera agotado para MongoDB, continuando de todos modos..."
+  fi
+done
+
+# Carga los datos de prueba en un entorno fresco
+if [ "${LOAD_SAMPLE_DATA}" = "true" ]; then
+  echo "Cargando datos de muestra..."
+  bin/rails db:seed
+fi
+
+# Ejecuta el comando proporcionado
+exec "$@"

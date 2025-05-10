@@ -1,0 +1,27 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  title: MyString
+  artist: MyString
+  authors: 
+  album: MyString
+  release_date: 2025-05-08
+  duration: MyString
+  genre: MyString
+  likes: 1
+  plays: 1
+  cover_url: MyString
+  audio_url: MyString
+
+two:
+  title: MyString
+  artist: MyString
+  authors: 
+  album: MyString
+  release_date: 2025-05-08
+  duration: MyString
+  genre: MyString
+  likes: 1
+  plays: 1
+  cover_url: MyString
+  audio_url: MyString

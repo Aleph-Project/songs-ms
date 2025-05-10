@@ -1,0 +1,1 @@
+puts 'Testing MongoDB connection...'; require 'mongoid'; Mongoid.load!(File.join(File.dirname(__FILE__), 'config', 'mongoid.yml'), :development); puts 'Connection successful!'; puts Mongoid.default_client.cluster.summary

@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    ports:
+      - "3001:3001"
+    environment:
+      - MONGODB_URI=mongodb://mongo:27017/songs_ms
+      - LOAD_SAMPLE_DATA=true
+    depends_on:
+      - mongo
+    restart: always
+    volumes:
+      - ./:/app
+      - gems:/usr/local/bundle
+
+  mongo:
+    image: mongo:6
+    volumes:
+      - mongo_data:/data/db
+    ports:
+      - "27018:27017"
+    restart: always
+
+volumes:
+  mongo_data:
+  gems:
