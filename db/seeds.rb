@@ -1,7 +1,7 @@
 # Solo borrar canciones y limpiar GridFS si no hay datos existentes (primera ejecución)
 if Song.count == 0
   puts "Base de datos vacía. Creando canciones de ejemplo..."
-  
+
   # Limpiar archivos de GridFS
   Mongo::Grid::FSBucket.new(Mongoid.default_client.database).files_collection.delete_many({})
 
@@ -10,7 +10,7 @@ if Song.count == 0
     {
       title: "Tití Me Preguntó",
       artist: "Bad Bunny",
-      authors: ["Benito Antonio Martínez Ocasio"],
+      authors: [ "Benito Antonio Martínez Ocasio" ],
       album: "Un Verano Sin Ti",
       release_date: "2022-05-06",
       duration: "4:03",
@@ -22,7 +22,7 @@ if Song.count == 0
     {
       title: "Anti-Hero",
       artist: "Taylor Swift",
-      authors: ["Taylor Swift", "Jack Antonoff"],
+      authors: [ "Taylor Swift", "Jack Antonoff" ],
       album: "Midnights",
       release_date: "2022-10-21",
       duration: "3:20",
@@ -34,7 +34,7 @@ if Song.count == 0
     {
       title: "Blinding Lights",
       artist: "The Weeknd",
-      authors: ["Abel Tesfaye", "Max Martin", "Oscar Holter"],
+      authors: [ "Abel Tesfaye", "Max Martin", "Oscar Holter" ],
       album: "After Hours",
       release_date: "2020-03-20",
       duration: "3:20",
@@ -46,7 +46,7 @@ if Song.count == 0
     {
       title: "Levitating",
       artist: "Dua Lipa",
-      authors: ["Dua Lipa", "Clarence Coffee Jr.", "Sarah Hudson", "Stephen Kozmeniuk"],
+      authors: [ "Dua Lipa", "Clarence Coffee Jr.", "Sarah Hudson", "Stephen Kozmeniuk" ],
       album: "Future Nostalgia",
       release_date: "2020-10-01",
       duration: "3:23",
@@ -58,7 +58,7 @@ if Song.count == 0
     {
       title: "Rojo",
       artist: "J Balvin",
-      authors: ["José Álvaro Osorio Balvín", "Sky Rompiendo"],
+      authors: [ "José Álvaro Osorio Balvín", "Sky Rompiendo" ],
       album: "Colores",
       release_date: "2020-03-19",
       duration: "3:10",
@@ -70,7 +70,7 @@ if Song.count == 0
     {
       title: "BREAK MY SOUL",
       artist: "Beyoncé",
-      authors: ["Beyoncé Knowles-Carter", "The-Dream", "Tricky Stewart", "Big Freedia"],
+      authors: [ "Beyoncé Knowles-Carter", "The-Dream", "Tricky Stewart", "Big Freedia" ],
       album: "Renaissance",
       release_date: "2022-07-29",
       duration: "4:38",

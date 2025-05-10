@@ -1,7 +1,7 @@
 module Api
   module V1
     class SongsController < ApplicationController
-      before_action :set_song, only: [:show, :update, :destroy]
+      before_action :set_song, only: [ :show, :update, :destroy ]
 
       # GET /api/v1/songs
       def index
@@ -41,18 +41,18 @@ module Api
       end
 
       private
-      
+
       # Método para obtener la canción por ID
       def set_song
         @song = Song.find(params[:id])
       rescue Mongoid::Errors::DocumentNotFound
-        render json: { error: 'Canción no encontrada' }, status: :not_found
+        render json: { error: "Canción no encontrada" }, status: :not_found
       end
 
       # Parámetros permitidos
       def song_params
         params.require(:song).permit(
-          :title, :artist, :album, :release_date, :duration, 
+          :title, :artist, :album, :release_date, :duration,
           :genre, :likes, :plays, :cover_url, :audio_url, authors: []
         )
       end

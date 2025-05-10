@@ -8,45 +8,45 @@ module Api
         else
           albums = MusicAlbum.all
         end
-        
+
         render json: albums.map { |album| album_to_json(album) }
       end
-      
+
       def show
         album = MusicAlbum.find_by(id: params[:id]) || MusicAlbum.find_by(spotify_id: params[:id])
-        
+
         if album
           render json: album_to_json(album)
         else
           render json: { error: "Álbum no encontrado" }, status: :not_found
         end
       end
-      
+
       private
-      
+
       def album_to_json(album)
         # Intentamos obtener el artista mediante la asociación directa
         artist = album.music_artist
-        
+
         # Si no encontramos el artista por la asociación, buscamos en otros lugares
         if artist.nil? && album.artist_id.present?
           # Buscar por ID o spotify_id
-          artist = MusicArtist.where(id: album.artist_id).first || 
+          artist = MusicArtist.where(id: album.artist_id).first ||
                   MusicArtist.where(spotify_id: album.artist_id).first
         end
-        
+
         # Buscar cualquier canción del álbum para obtener el nombre del artista como último recurso
         artist_name = if artist
                         artist.name
-                      else
+        else
                         # Intentar obtener de las canciones asociadas
                         song = Song.where(album: album.title).first
                         song&.artist || "Artista Desconocido"
-                      end
-        
+        end
+
         songs = Song.where(album: album.title)
         songs_count = songs.count
-        
+
         {
           id: album.id.to_s,
           spotify_id: album.spotify_id,

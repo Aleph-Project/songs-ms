@@ -9,21 +9,21 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       resources :songs do
-        get 'audio', on: :member
+        get "audio", on: :member
       end
-      resources :artists, only: [:index, :show]
-      resources :albums, only: [:index, :show]
-      resources :audios, only: [:show]
-      
+      resources :artists, only: [ :index, :show ]
+      resources :albums, only: [ :index, :show ]
+      resources :audios, only: [ :show ]
+
       # Rutas para la API de Spotify
-      post 'spotify/import_albums', to: 'spotify#import_albums'
-      post 'spotify/import_artist', to: 'spotify#import_artist'
-      post 'spotify/import_album', to: 'spotify#import_album'  # Nueva ruta para importar un álbum específico
-      get 'spotify/search_albums', to: 'spotify#search_albums'  # Nueva ruta para buscar álbumes
-      get 'spotify/callback', to: 'spotify#callback'
+      post "spotify/import_albums", to: "spotify#import_albums"
+      post "spotify/import_artist", to: "spotify#import_artist"
+      post "spotify/import_album", to: "spotify#import_album"  # Nueva ruta para importar un álbum específico
+      get "spotify/search_albums", to: "spotify#search_albums"  # Nueva ruta para buscar álbumes
+      get "spotify/callback", to: "spotify#callback"
     end
   end
-  
+
   # Define root route to API docs or status page
   root "rails/health#show"
 end

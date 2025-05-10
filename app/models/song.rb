@@ -1,7 +1,7 @@
 class Song
   include Mongoid::Document
   include Mongoid::Timestamps
-  
+
   field :title, type: String
   field :artist, type: String
   field :authors, type: Array, default: []
@@ -12,14 +12,14 @@ class Song
   field :likes, type: Integer, default: 0
   field :plays, type: Integer, default: 0
   field :cover_url, type: String
-  
+
   # GridFS audio file fields
   field :audio_file_id, type: BSON::ObjectId
   field :audio_filename, type: String
   field :audio_content_type, type: String
   field :audio_size, type: Integer
   field :audio_fingerprint, type: String
-  
+
   field :spotify_id, type: String
   field :album_id, type: String
 
@@ -30,7 +30,7 @@ class Song
   validates :release_date, presence: true
   validates :duration, presence: true
   validates :genre, presence: true
-  
+
   # Índices para búsquedas eficientes
   index({ title: 1 })
   index({ artist: 1 })
@@ -51,14 +51,14 @@ class Song
 
     # Store new file
     grid_fs = Mongo::Grid::FSBucket.new(Mongoid.default_client.database)
-    
+
     # Upload the file and get the id
     file_id = grid_fs.upload_from_stream(
       file.original_filename,
       file.tempfile,
       content_type: file.content_type
     )
-    
+
     self.audio_file_id = file_id
     self.audio_filename = file.original_filename
     self.audio_content_type = file.content_type
@@ -68,7 +68,7 @@ class Song
 
   def audio_file
     return nil unless audio_file_id
-    
+
     grid_fs = Mongo::Grid::FSBucket.new(Mongoid.default_client.database)
     stream = grid_fs.open_download_stream(audio_file_id)
     stream.read

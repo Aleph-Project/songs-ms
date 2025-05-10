@@ -3,7 +3,7 @@ module Api
     class ArtistsController < ApplicationController
       def index
         artists = MusicArtist.all
-        render json: artists.map { |artist| 
+        render json: artists.map { |artist|
           {
             id: artist.spotify_id,
             name: artist.name,
@@ -13,10 +13,10 @@ module Api
           }
         }
       end
-      
+
       def show
         artist = MusicArtist.where(spotify_id: params[:id]).first
-        
+
         if artist
           render json: {
             id: artist.spotify_id,
