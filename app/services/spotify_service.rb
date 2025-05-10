@@ -209,24 +209,29 @@ class SpotifyService
         end
 
         # Crear una canción para cada track del álbum
-        song = Song.where(spotify_id: track.id).first_or_create do |s|
-          s.title = track.name.presence || "Desconocido"
-          s.artist = db_artist.name
-          s.authors = track.artists.map(&:name)
-          s.album = db_album.title
-          s.album_id = db_album.spotify_id
-          s.release_date = db_album.release_date || Date.today
-          s.duration = format_duration(track.duration_ms)
-          s.genre = determine_genre(track, db_artist)
-          s.likes = rand(10000..500000) # Valores aleatorios para estadísticas
-          s.plays = rand(50000..2000000)
-          s.cover_url = album_cover_url || "/placeholder.svg?height=80&width=80"
-          s.audio_url = "/audio/sample#{rand(1..10)}.mp3" # Uso de audio de muestra
-          s.spotify_id = track.id
-        end
+        song = Song.where(spotify_id: track.id).first_or_initialize
         
-        added_tracks += 1
-        Rails.logger.info("Canción creada exitosamente: #{song.id} - #{song.title} con portada: #{song.cover_url}")
+        # Establecemos todos los campos necesarios
+        song.title = track.name.presence || "Desconocido"
+        song.artist = db_artist.name
+        song.authors = track.artists.map(&:name)
+        song.album = db_album.title
+        song.album_id = db_album.id.to_s  # ID interno de MongoDB
+        song.release_date = db_album.release_date || Date.today
+        song.duration = format_duration(track.duration_ms)
+        song.genre = determine_genre(track, db_artist)
+        song.likes = rand(10000..500000) # Valores aleatorios para estadísticas
+        song.plays = rand(50000..2000000)
+        song.cover_url = album_cover_url || "/placeholder.svg?height=80&width=80"
+        song.spotify_id = track.id
+        
+        # Guardar explícitamente la canción para asegurar que se guarde
+        if song.save
+          added_tracks += 1
+          Rails.logger.info("Canción creada exitosamente: #{song.id} - #{song.title} con portada: #{song.cover_url}")
+        else
+          Rails.logger.error("Error al guardar la canción: #{song.errors.full_messages.join(', ')}")
+        end
       rescue => e
         Rails.logger.error("Error al crear canción: #{e.message}")
         # Continuar con la siguiente canción si hay un error
@@ -291,8 +296,8 @@ class SpotifyService
       existing_album = MusicAlbum.where(spotify_id: album.id).first
       if existing_album
         Rails.logger.info("El álbum '#{album.name}' ya existe en la base de datos")
-        # Contar las canciones existentes para este álbum
-        existing_tracks = Song.where(album_id: album.id).count
+        # Contar las canciones existentes para este álbum usando el ID interno de MongoDB
+        existing_tracks = Song.where(album_id: existing_album.id.to_s).count
         tracks_imported += existing_tracks
         albums_imported += 1
         imported_albums << {
@@ -361,9 +366,11 @@ class SpotifyService
       album_with_tracks = get_album_by_id(album.id)
       if album_with_tracks && import_album_to_database(album_with_tracks)
         db_album = MusicAlbum.where(spotify_id: album.id).first
+        # Verificar el número correcto de canciones importadas para este álbum
+        track_count = Song.where(album_id: db_album.id.to_s).count
+        Rails.logger.info("  ✅ Álbum '#{album.name}' importado exitosamente con #{track_count} canciones")
         result[:total] += 1
         result[:albums] << db_album.title
-        Rails.logger.info("  ✅ Álbum '#{album.name}' importado exitosamente")
       else
         result[:skipped] << { name: album.name, reason: "import_failed" }
         Rails.logger.info("  ❌ No se pudo importar el álbum '#{album.name}'")
