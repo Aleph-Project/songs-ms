@@ -81,7 +81,7 @@ yarn-debug.log*
 .env.*
 .envrc
 .rbenv-vars
-.ruby-version
+# Necesario para CI, no ignorar: .ruby-version
 .ruby-gemset
 .rvmrc
 .tool-versions
