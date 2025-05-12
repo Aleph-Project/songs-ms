@@ -178,7 +178,7 @@ test:
     default:
       database: songs_ms_test
       hosts:
-        - mongo:27017
+        - <%= ENV['MONGO_HOST'] || 'mongo' %>:27017
       options:
         read:
           mode: :primary
