@@ -11,7 +11,6 @@ class MusicArtist
   # Relaciones
   has_many :music_albums, foreign_key: :artist_id
   has_many :songs, foreign_key: :artist
-  has_and_belongs_to_many :music_genres, inverse_of: nil
 
   # Validaciones
   validates :name, presence: true
@@ -57,32 +56,6 @@ class MusicArtist
     )
 
     Rails.logger.info("Artista creado con éxito. ID: #{artist.id}, Nombre: #{artist.name}, Imagen: #{artist.image_url}")
-    
-    # Actualizar géneros del artista
-    artist.update_music_genres if artist.genres.present?
-    
     artist
-  end
-  
-  # Actualiza los géneros del artista en la colección MusicGenre
-  def update_music_genres
-    # Limpiar los géneros actuales
-    self.music_genres.clear
-    
-    # Para cada género en el array de strings, buscar o crear el modelo MusicGenre
-    self.genres.each do |genre_name|
-      next if genre_name.blank?
-      
-      # Buscar o crear el género
-      genre = MusicGenre.find_or_create_by_name(genre_name)
-      
-      # Asociar el género con este artista
-      self.music_genres << genre unless self.music_genres.include?(genre)
-    end
-    
-    # Guardar los cambios
-    self.save
-    
-    Rails.logger.info("Géneros actualizados para el artista #{self.name}: #{self.genres.join(', ')}")
   end
 end
