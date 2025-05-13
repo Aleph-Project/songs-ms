@@ -13,6 +13,8 @@ Rails.application.routes.draw do
       end
       resources :artists, only: [ :index, :show ]
       resources :albums, only: [ :index, :show ]
+      resources :genres, only: [ :index, :show ]
+      resources :categories, only: [ :index, :show ]
       resources :audios, only: [ :show ]
 
       # Rutas para la API de Spotify
