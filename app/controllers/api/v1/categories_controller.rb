@@ -18,7 +18,7 @@ module Api
         genres = MusicGenre.where(category: category_id.titleize)
         
         if genres.exists?
-          # Construir respuesta
+          # Construir respuesta 
           category = {
             id: category_id,
             name: category_id.titleize,

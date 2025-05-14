@@ -11,7 +11,9 @@ Rails.application.routes.draw do
       resources :songs, controller: 'api/v1/songs' do
         get "audio", on: :member
       end
-      resources :artists, only: [ :index, :show ], controller: 'api/v1/artists'
+      resources :artists, only: [ :index, :show ], controller: 'api/v1/artists' do
+        get "details", on: :member
+      end
       resources :albums, only: [ :index, :show ], controller: 'api/v1/albums'
       resources :categories, only: [ :index, :show ], controller: 'api/v1/categories'
       resources :audios, only: [ :show ], controller: 'api/v1/audios'
